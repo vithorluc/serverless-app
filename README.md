@@ -79,6 +79,14 @@ To deploy the service to AWS, run:
 serverless deploy
 ```
 
+## Running the Services Locally With Serveless Offline
+
+To deploy the service to AWS, run:
+
+```sh
+npm run offline
+```
+
 ## API Endpoints
 
 Here are the available endpoints for the Todo API:
