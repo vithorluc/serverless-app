@@ -81,7 +81,7 @@ serverless deploy
 
 ## Running the Services Locally With Serveless Offline
 
-To deploy the service to AWS, run:
+To run it locally with Serverless Offline Plugin, run:
 
 ```sh
 npm run offline
