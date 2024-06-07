@@ -1,0 +1,71 @@
+service: serverless-todo-app
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    TABLE_NAME: Todos
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TABLE_NAME}
+
+functions:
+  createTodo:
+    handler: src/handlers/createTodo.createTodo
+    events:
+      - http:
+          path: todos
+          method: post
+  getTodos:
+    handler: src/handlers/getTodos.getTodos
+    events:
+      - http:
+          path: todos
+          method: get
+  getTodo:
+    handler: src/handlers/getTodo.getTodo
+    events:
+      - http:
+          path: todos/{id}
+          method: get
+  updateTodo:
+    handler: src/handlers/updateTodo.updateTodo
+    events:
+      - http:
+          path: todos/{id}
+          method: put
+  deleteTodo:
+    handler: src/handlers/deleteTodo.deleteTodo
+    events:
+      - http:
+          path: todos/{id}
+          method: delete
+
+resources:
+  Resources:
+    TodosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Todos
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
